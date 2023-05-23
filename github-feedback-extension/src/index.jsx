@@ -11,6 +11,8 @@ import styled from '@emotion/styled';
 import { Textarea } from './components/textarea';
 import Roboto from "./assets/fonts/Roboto-Regular.ttf";
 import { Toast } from './components/center-toast';
+import Calendar, { LongestStreak, CurrentStreak } from './components/calendar';
+
 
 let div = document.createElement("div");
 const source = window.location.href;
@@ -32,6 +34,7 @@ const App = () => {
     let [saving, setSaving] = useState(false);
     let [errors, setErrors] = useState(null);
     let [showSuccess, setShowSuccess] = useState(false);
+    let [showDiary, setShowDiary] = useState(false);
 
     const onTagClicked = (tag) => {
         tag.active = !tag.active;
@@ -80,40 +83,100 @@ const App = () => {
     };
 
     return (
-        <Card>
-            <Toast content="Your feedback has been submitted successfully." show={showSuccess} />
-            <CardHeader dismissible>
-            Let's Reflect.
-            </CardHeader>
-            <CardBody>
-                <CardSection>
-                    <CardInfo>How are you feeling now?</CardInfo>
-                    <Selector selected={moods} onEmojiRemoved={removeEmoji} addEmoji={addEmoji} error={errors && !errors.moods} />
-                </CardSection>
-                <CardSection>
-                    <CardInfo>What inspired that?</CardInfo>
-                    <Container flex>
-                        <TagSelector dismissOverride={false} onTagClicked={onTagClicked} selected={tags} />
-                    </Container>
-                </CardSection>
-                <CardSection>
-                    <CardInfo>Your findings</CardInfo>
-                    <CustomContainer bordered>
-                        <TagSelector dismissOverride={true} onTagRemoved={removeTag} selected={tags.filter(t => !!t.active)} />
-                    </CustomContainer>
-                </CardSection>
-                <CardSection>
-                    <CardInfo>Would you like to share more?</CardInfo>
-                    <CustomTextArea bordered full error={errors && !errors.feedback} value={feedback} onChange={e => setFeedback(e.target.value)} />
-                </CardSection>
-            </CardBody>
-            <CardFooter>
-                <ButtonContainer>
-                    <Button primary disabled={saving}>My Diary</Button>
-                    <Button onClick={submitForm} disabled={saving}>Submit</Button>
-                </ButtonContainer>
-            </CardFooter>
-        </Card>
+        <div>
+            {showDiary ? (
+                <div>
+                    <Card>
+                        <CardHeader dismissible>
+                            My Log
+                        </CardHeader>
+                        <CardBody>
+                            <CardSection>
+                                <div style={{textAlign: "center"}}>
+                                    Way to go!
+                                </div>
+                                <div style={{textAlign: "center", fontSize: "15px", padding: "5px"}}>
+                                    You've completed your daily checkin
+                                </div>
+                                <div style={{display: "flex", justifyContent: "space-evenly", marginTop: "1vh"}}>
+                                    <div style={{padding: "10px", backgroundColor: "#34eba8", borderRadius: "10px"}}>
+                                        <div style={{textAlign: "center", fontSize: "10px", color: "whitesmoke"}}>
+                                            Daily Checkin
+                                        </div>
+                                        <div>
+                                            <div style={{textAlign: "center", fontSize: "15px", marginTop: "5px", color: "whitesmoke"}}>
+                                                Finished!
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div style={{padding: "10px", backgroundColor: "#3483eb", borderRadius: "10px"}}>
+                                        <div style={{textAlign: "center", fontSize: "10px", color: "whitesmoke"}}>
+                                            Current Streak
+                                        </div>
+                                        <div style={{textAlign: "center", fontSize: "15px", marginTop: "5px", color: "whitesmoke"}}>
+                                            <CurrentStreak />
+                                        </div>
+                                    </div>
+
+                                    <div style={{padding: "10px", backgroundColor: "#c4a9c9", borderRadius: "10px"}}>
+                                        <div style={{textAlign: "center", fontSize: "10px", color: "whitesmoke"}}>
+                                            Longest Streak
+                                        </div>
+                                        <div style={{textAlign: "center", fontSize: "15px", marginTop: "5px", color: "whitesmoke"}}>
+                                            <LongestStreak />
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardSection>
+                            <CardSection style={{height: "50vh"}}>
+                                <Calendar/>
+                            </CardSection>
+                            <CardSection>
+
+                            </CardSection>
+                        </CardBody>
+                    </Card>
+                </div>
+            ) : (
+                <div>
+                    <Card>
+                        <Toast content="Your feedback has been submitted successfully." show={showSuccess} />
+                        <CardHeader dismissible>
+                            Let's Reflect.
+                        </CardHeader>
+                        <CardBody>
+                            <CardSection>
+                                <CardInfo>How are you feeling now?</CardInfo>
+                                <Selector selected={moods} onEmojiRemoved={removeEmoji} addEmoji={addEmoji} error={errors && !errors.moods} />
+                            </CardSection>
+                            <CardSection>
+                                <CardInfo>What inspired that?</CardInfo>
+                                <Container flex>
+                                    <TagSelector dismissOverride={false} onTagClicked={onTagClicked} selected={tags} />
+                                </Container>
+                            </CardSection>
+                            <CardSection>
+                                <CardInfo>Your findings</CardInfo>
+                                <CustomContainer bordered>
+                                    <TagSelector dismissOverride={true} onTagRemoved={removeTag} selected={tags.filter(t => !!t.active)} />
+                                </CustomContainer>
+                            </CardSection>
+                            <CardSection>
+                                <CardInfo>Would you like to share more?</CardInfo>
+                                <CustomTextArea bordered full error={errors && !errors.feedback} value={feedback} onChange={e => setFeedback(e.target.value)} />
+                            </CardSection>
+                        </CardBody>
+                        <CardFooter>
+                            <ButtonContainer>
+                                <Button onClick={() => setShowDiary(true)} disabled={saving}>My Diary</Button>
+                                <Button onClick={submitForm} disabled={saving}>Submit</Button>
+                            </ButtonContainer>
+                        </CardFooter>
+                    </Card>
+                </div>
+            )}
+        </div>
     );
 };
 
@@ -128,9 +191,10 @@ div.style.top = "20px";
 div.style.right = "10px";
 div.style.zIndex = "999";
 div.style.maxHeight = "90vh";
-div.style.height = "700px";
+div.style.height = "800px";
 div.style.transition = "transform 0.3s ease-in";
 div.style.fontFamily = `'Roboto'`;
+
 
 // allow user to dismiss the feedback form
 let listener = div.addEventListener("click", (e) => {

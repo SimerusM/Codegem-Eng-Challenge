@@ -22,7 +22,13 @@ class FeedbackService {
                                     f.feedbackId = id;
                                     return f; 
                                 }))])
-                    .then(results => ({ id }));
+                    .then(results => ({ id }))
+                    .catch(() => {
+                        console.log("Promise rejected")
+                    });
+        })
+        .catch(() => {
+            console.log("Promise rejected")
         });
     }
 }
