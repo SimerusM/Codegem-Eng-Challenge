@@ -7,6 +7,7 @@ import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import './calendar.css';
 
 export const CurrentStreak = () => {
+    // This would come through the user's database info
     const [highlightedDays, setHighlightedDays] = React.useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 15, 17, 18, 20, 21, 22]);
 
     var currDate = new Date(), date = currDate.getDate();
@@ -45,6 +46,7 @@ export const CurrentStreak = () => {
 }
 
 export const LongestStreak = () => {
+    // This would come through the user's database info
     const [highlightedDays, setHighlightedDays] = React.useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 15, 17, 18, 20, 21, 22]);
   
     // calculates the longest streak

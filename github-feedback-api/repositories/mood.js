@@ -7,15 +7,18 @@ class MoodRepository {
     }
 
     saveMood(mood) {
+        console.log(mood);
         return this.dbProvider.add(this.tableName, this._getInsertOrUpdateEntity(mood));
     }
 
     saveMoods(moods) {
+        console.log(moods);
         return this.dbProvider.addMany(this.tableName, moods.map(mood => this._getInsertOrUpdateEntity(mood)));
     }
 
     _getInsertOrUpdateEntity({ feedbackId, id, ...props }) {
         let result = {feedback_id: feedbackId, ...props};
+        console.log(result);
 
         if (id !== null) {
             result.id = id;

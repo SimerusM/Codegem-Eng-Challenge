@@ -7,6 +7,7 @@ class FeedbackRepository {
     }
 
     saveFeedback({ source, feedback }) {
+        console.log(feedback);
         return this.dbProvider.add(this.tableName, { feedback, source }).then(([id]) => id);
     }
 }
