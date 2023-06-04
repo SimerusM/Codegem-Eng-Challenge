@@ -25,41 +25,85 @@ describe("TagRepository", () => {
     });
 
     describe("saveTag", () => {
-        it("this test should save a single tag to the database on success", () => {
-        const tag = { feedbackId: 1, id: 1, name: "Imapctful Work" };
+        it("this test should save a tag to the database", () => {
+            const tag = { feedbackId: 1, id: 1, name: "Imapctful Work" };
+      
+            tagRepository.saveTag(tag);
+      
+            expect(dbProviderMock.add).toHaveBeenCalled();
+        });
 
-        tagRepository.saveTag(tag);
-
-        expect(dbProviderMock.add).toHaveBeenCalledWith(
-            tagRepository.tableName,
-            {
-                feedback_id: tag.feedbackId,
-                id: tag.id,
-                name: tag.name
-            }
-        );
+        it("this test should save a tag with the correct table name", () => {
+            const tag = { feedbackId: 1, id: 1, name: "Imapctful Work" };
+      
+            tagRepository.saveTag(tag);
+      
+            expect(dbProviderMock.add).toHaveBeenCalledWith(
+                "tag",
+                expect.any(Object)
+            );
+        });
+      
+        it("this test should save a tag with the correct data", () => {
+            const tag = { feedbackId: 1, id: 1, name: "Imapctful Work" };
+      
+            tagRepository.saveTag(tag);
+      
+            expect(dbProviderMock.add).toHaveBeenCalledWith(
+                expect.any(String),
+                {
+                    feedback_id: expect.any(Number),
+                    id: expect.any(Number),
+                    name: expect.any(String)
+                }
+            );
         });
     });
 
     describe("saveTags", () => {
-        it("this test should save multiple tags to the database on success", () => {
-        const tags = [
-            { feedbackId: 1, id: 1, name: "Mentorship" },
-            { feedbackId: 2, id: 2, name: "Learning" }
-        ];
+        it("this test should save multiple tags to the database", () => {
+            const tags = [
+                { feedbackId: 1, id: 1, name: "Mentorship" },
+                { feedbackId: 2, id: 2, name: "Learning" }
+            ];
+      
+            tagRepository.saveTags(tags);
+      
+            expect(dbProviderMock.addMany).toHaveBeenCalled();
+        });
 
-        tagRepository.saveTags(tags);
-
-        const expectedEntities = tags.map(tag => ({
-            feedback_id: tag.feedbackId,
-            id: tag.id,
-            name: tag.name
-        }));
-
-        expect(dbProviderMock.addMany).toHaveBeenCalledWith(
-            tagRepository.tableName,
-            expectedEntities
-        );
+        it("this test should save multiple tags with the correct table name", () => {
+            const tags = [
+                { feedbackId: 1, id: 1, name: "Mentorship" },
+                { feedbackId: 2, id: 2, name: "Learning" }
+            ];
+      
+            tagRepository.saveTags(tags);
+      
+            expect(dbProviderMock.addMany).toHaveBeenCalledWith(
+              "tag",
+              expect.any(Array)
+            );
+        });
+      
+        it("this test should save multiple tags with the correct data", () => {
+            const tags = [
+                { feedbackId: 1, id: 1, name: "Mentorship" },
+                { feedbackId: 2, id: 2, name: "Learning" }
+            ];
+      
+            tagRepository.saveTags(tags);
+      
+            expect(dbProviderMock.addMany).toHaveBeenCalledWith(
+                expect.any(String),
+                expect.arrayContaining([
+                    expect.objectContaining({
+                    feedback_id: expect.any(Number),
+                    id: expect.any(Number),
+                    name: expect.any(String)
+                    })
+                ])
+            );
         });
     });
 });

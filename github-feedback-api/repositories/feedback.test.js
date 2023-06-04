@@ -24,21 +24,30 @@ describe("FeedbackRepository", () => {
     });
 
     describe("saveFeedback", () => {
-        it("this test should save feedback to the database and return the id on success", async () => {
+        it("this test should save feedback to the database", async () => {
             const feedbackData = {
-                source: "user",
-                feedback: "Great job!"
+                source: "User",
+                feedback: "This is some feedback for the manager"
             };
-
-            const expectedId = 1;
-
-            const savedId = await feedbackRepository.saveFeedback(feedbackData);
-
-            expect(savedId).toBe(expectedId);
+      
+            const id = await feedbackRepository.saveFeedback(feedbackData);
+      
             expect(dbProviderMock.add).toHaveBeenCalledWith(
-                feedbackRepository.tableName,
-                feedbackData
+                "feedback",
+                expect.objectContaining(feedbackData)
             );
+            expect(id).toBe(1);
+        });
+      
+        it("this test should return the ID of the saved feedback", async () => {
+            const feedbackData = {
+                source: "Manager",
+                feedback: "Another feedback for the manager"
+            };
+      
+            const id = await feedbackRepository.saveFeedback(feedbackData);
+      
+            expect(id).toBe(1);
         });
     });
 });

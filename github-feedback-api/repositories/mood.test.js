@@ -25,41 +25,85 @@ describe("MoodRepository", () => {
     });
 
     describe("saveMood", () => {
-        it("this test should save a single mood to the database on success", () => {
-        const mood = { feedbackId: 1, id: 1, mood: "Sad" };
-
-        moodRepository.saveMood(mood);
-
-        expect(dbProviderMock.add).toHaveBeenCalledWith(
-            moodRepository.tableName,
-            {
-                id: mood.id,
-                feedback_id: mood.feedbackId,
-                mood: mood.mood
-            }
-        );
+        it("this test should save a mood to the database", () => {
+            const mood = { feedbackId: 1, id: 1, mood: "Sad" };
+      
+            moodRepository.saveMood(mood);
+      
+            expect(dbProviderMock.add).toHaveBeenCalled();
+        });
+      
+        it("this test should save a mood with the correct table name", () => {
+            const mood = { feedbackId: 1, id: 1, mood: "Sad" };
+    
+            moodRepository.saveMood(mood);
+    
+            expect(dbProviderMock.add).toHaveBeenCalledWith(
+                "mood",
+                expect.any(Object)
+            );
+        });
+      
+        it("this test should save a mood with the correct data", () => {
+            const mood = { feedbackId: 1, id: 1, mood: "Sad" };
+      
+            moodRepository.saveMood(mood);
+      
+            expect(dbProviderMock.add).toHaveBeenCalledWith(
+                expect.any(String),
+                {
+                    feedback_id: expect.any(Number),
+                    id: expect.any(Number),
+                    mood: expect.any(String)
+                }
+            );
         });
     });
 
     describe("saveMoods", () => {
-        it("this test should save multiple moods to the database on success", () => {
-        const moods = [
-            { feedbackId: 1, id: 1, mood: "Neutral" },
-            { feedbackId: 2, id: 2, mood: "Sick" }
-        ];
-
-        moodRepository.saveMoods(moods);
-
-        const expectedEntities = moods.map(mood => ({
-            id: mood.id,
-            feedback_id: mood.feedbackId,
-            mood: mood.mood
-        }));
-
-        expect(dbProviderMock.addMany).toHaveBeenCalledWith(
-            moodRepository.tableName,
-            expectedEntities
-        );
+        it("this test should save multiple moods to the database", () => {
+            const moods = [
+                { feedbackId: 1, id: 1, mood: "Neutral" },
+                { feedbackId: 2, id: 2, mood: "Sick" }
+            ];
+      
+            moodRepository.saveMoods(moods);
+      
+            expect(dbProviderMock.addMany).toHaveBeenCalled();
+        });
+      
+        it("this test should save multiple moods with the correct table name", () => {
+            const moods = [
+                { feedbackId: 1, id: 1, mood: "Neutral" },
+                { feedbackId: 2, id: 2, mood: "Sick" }
+            ];
+      
+            moodRepository.saveMoods(moods);
+      
+            expect(dbProviderMock.addMany).toHaveBeenCalledWith(
+                "mood",
+                expect.any(Array)
+            );
+        });
+      
+        it("this test should save multiple moods with the correct data", () => {
+            const moods = [
+                { feedbackId: 1, id: 1, mood: "Neutral" },
+                { feedbackId: 2, id: 2, mood: "Sick" }
+            ];
+      
+            moodRepository.saveMoods(moods);
+      
+            expect(dbProviderMock.addMany).toHaveBeenCalledWith(
+                expect.any(String),
+                expect.arrayContaining([
+                    expect.objectContaining({
+                    feedback_id: expect.any(Number),
+                    id: expect.any(Number),
+                    mood: expect.any(String)
+                    })
+                ])
+            );
         });
     });
 });

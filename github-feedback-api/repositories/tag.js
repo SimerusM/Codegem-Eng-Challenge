@@ -7,7 +7,6 @@ class TagRepository {
     }
 
     saveTag(tag) {
-        console.log(tag);
         return this.dbProvider.add(this.tableName, this._getInsertOrUpdateEntity(tag));
     }
 
@@ -17,7 +16,6 @@ class TagRepository {
 
     _getInsertOrUpdateEntity({ feedbackId, id, ...props }) {
         let result = {feedback_id: feedbackId, ...props};
-        console.log(result);
 
         if (id !== null) {
             result.id = id;
